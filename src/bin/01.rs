@@ -24,7 +24,9 @@ fn part_2(input: &str) -> i32 {
         *map.entry(x).or_insert(0) += 1;
         map
     });
-    left.into_iter().map(|x| x * (*counter.get(&x).unwrap_or(&0))).sum()
+    left.into_iter()
+        .map(|x| x * (*counter.get(&x).unwrap_or(&0)))
+        .sum()
 }
 
 fn main() {
