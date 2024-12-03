@@ -19,25 +19,20 @@ fn part_2(input: &str) -> u32 {
     expression
         .captures_iter(input)
         .map(|c| c.iter().collect::<Vec<Option<_>>>())
-        .fold((0, true), |(count, enabled), values| match values[..] {
-            [_, _, _, Some(_), _] => (count, true),
-            [_, _, _, _, Some(_)] => (count, false),
-            [_, Some(x), Some(y), _, _] => {
-                if enabled {
-                    (
-                        count
-                            + (x.as_str().parse::<u32>().unwrap()
-                                * y.as_str().parse::<u32>().unwrap()),
-                        enabled,
-                    )
-                } else {
-                    (count, enabled)
+        .fold((0, true), |(count, enabled), values| {
+            match values[0].unwrap().as_str() {
+                "do()" => (count, true),
+                "don't()" => (count, false),
+                _ => {
+                    if enabled {
+                        let x = values[1].unwrap().as_str().parse::<u32>().unwrap();
+                        let y = values[2].unwrap().as_str().parse::<u32>().unwrap();
+                        (count + (x * y), enabled)
+                    } else {
+                        (count, enabled)
+                    }
                 }
             }
-            _ => unreachable!(
-                "should not produce output of size other than 5 or with all members None: {:?}",
-                values
-            ),
         })
         .0
 }
