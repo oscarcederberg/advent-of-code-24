@@ -48,23 +48,27 @@ fn part_1(input: &str) -> i32 {
         queue.clear()
     }
 
-    for diagonal in 3..std::cmp::min(rows, cols) {
-        for row in 0..diagonal {
-            if push_char(&mut queue, chars[row][diagonal - row]) {
-                count += 1;
+    for diagonal in 0..(rows + cols - 2) {
+        for col in 0..=diagonal {
+            let row = diagonal - col;
+            if row < rows && col < cols {
+                if push_char(&mut queue, chars[row][col]) {
+                    count += 1;
+                }
             }
         }
 
         queue.clear();
 
-        for row in 0..diagonal {
-            if push_char(
-                &mut queue,
-                chars[rows - row - 1][cols - (diagonal - row) - 1],
-            ) {
-                count += 1;
+        for col in 0..=diagonal {
+            let row = diagonal - col;
+            if row < rows && col < cols {
+                if push_char(&mut queue, chars[rows - row - 1][col]) {
+                    count += 1;
+                }
             }
         }
+
         queue.clear();
     }
 
@@ -72,7 +76,26 @@ fn part_1(input: &str) -> i32 {
 }
 
 fn part_2(input: &str) -> i32 {
-    0
+    let mut count = 0;
+    let chars: Vec<Vec<_>> = input.lines().map(|l| l.chars().collect()).collect();
+
+    for row in 0..(chars.len() - 2) {
+        for col in 0..(chars[0].len() - 2) {
+            match [(0, 0), (1, 1), (2, 2), (0, 2), (2, 0)]
+                .iter()
+                .map(|(r, c)| chars[row + r][col + c])
+                .collect::<Vec<_>>()[..]
+            {
+                ['M', 'A', 'S', 'M', 'S'] => count += 1,
+                ['M', 'A', 'S', 'S', 'M'] => count += 1,
+                ['S', 'A', 'M', 'M', 'S'] => count += 1,
+                ['S', 'A', 'M', 'S', 'M'] => count += 1,
+                _ => (),
+            }
+        }
+    }
+
+    count
 }
 
 fn main() {
