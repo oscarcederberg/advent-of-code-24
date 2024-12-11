@@ -45,7 +45,7 @@ fn part_1(input: &str) -> usize {
         if height == 9 {
             reachable.insert(item);
         } else {
-            [(-1,0), (0, -1), (1, 0), (0, 1)]
+            [(-1, 0), (0, -1), (1, 0), (0, 1)]
                 .into_iter()
                 .for_each(|(dx, dy)| {
                     let (check_x, check_y) = (item.x as i32 + dx, item.y as i32 + dy);
@@ -100,7 +100,7 @@ fn part_2(input: &str) -> usize {
         if height == 9 {
             reachable += 1;
         } else {
-            [(-1,0), (0, -1), (1, 0), (0, 1)]
+            [(-1, 0), (0, -1), (1, 0), (0, 1)]
                 .into_iter()
                 .for_each(|(dx, dy)| {
                     let (check_x, check_y) = (item.x as i32 + dx, item.y as i32 + dy);
