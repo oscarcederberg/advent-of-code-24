@@ -87,25 +87,56 @@ fn part_2(input: &str) -> usize {
                             }
                         }
                     });
-                [(-1, -1), (1, -1), (1, 1), (-1, -1)]
-                    .into_iter()
-                    .for_each(|(dx, dy)| {
-                        let (check_x, check_y) = (x as i32 + dx, y as i32 + dy);
-                        if check_x >= 0 && check_x < cols && check_y >= 0 && check_y < rows {
-                            let (plot_x, plot_y) = (check_x as usize, check_y as usize);
-                            if plots[plot_y][plot_x] != *plant {
-                                sides += 1;
-                            }
-                        }
-                    });
+                [
+                    ((-1, 0), (-1, -1), (0, -1)),
+                    ((0, -1), (1, -1), (1, 0)),
+                    ((1, 0), (1, 1), (0, 1)),
+                    ((0, 1), (-1, 1), (-1, 0)),
+                ]
+                .into_iter()
+                .for_each(|((dx_l, dy_l), (dx_c, dy_c), (dx_r, dy_r))| {
+                    let (check_x_l, check_y_l) = (x as i32 + dx_l, y as i32 + dy_l);
+                    let l_is_outside =
+                        !(check_x_l >= 0 && check_x_l < cols && check_y_l >= 0 && check_y_l < rows);
+                    let mut l_is_other = false;
+                    if !l_is_outside {
+                        let (plot_x, plot_y) = (check_x_l as usize, check_y_l as usize);
+                        l_is_other = plots[plot_y][plot_x] != *plant;
+                    }
+
+                    let (check_x_r, check_y_r) = (x as i32 + dx_r, y as i32 + dy_r);
+                    let r_is_outside =
+                        !(check_x_r >= 0 && check_x_r < cols && check_y_r >= 0 && check_y_r < rows);
+                    let mut r_is_other = false;
+                    if !r_is_outside {
+                        let (plot_x, plot_y) = (check_x_r as usize, check_y_r as usize);
+                        r_is_other = plots[plot_y][plot_x] != *plant;
+                    }
+
+                    let (check_x_c, check_y_c) = (x as i32 + dx_c, y as i32 + dy_c);
+                    let c_is_outside =
+                        !(check_x_c >= 0 && check_x_c < cols && check_y_c >= 0 && check_y_c < rows);
+                    let mut c_is_other = false;
+                    if !c_is_outside {
+                        let (plot_x, plot_y) = (check_x_c as usize, check_y_c as usize);
+                        c_is_other = plots[plot_y][plot_x] != *plant;
+                    }
+
+                    if (l_is_outside || l_is_other)
+                        && (c_is_outside || c_is_other)
+                        && (r_is_outside || r_is_other)
+                    {
+                        sides += 1;
+                    } else if !l_is_other && c_is_other && !r_is_other {
+                        sides += 1;
+                    } else if l_is_other && !c_is_other && r_is_other {
+                        sides += 1;
+                    }
+                });
             }
             regions.push((*plant, area, sides));
         })
     });
-
-    regions
-        .iter()
-        .for_each(|(plant, area, sides)| println!("{}: {} * {}", plant, area, sides));
 
     regions
         .iter()
