@@ -24,7 +24,7 @@ fn part_1(input: &str) -> u64 {
             [a_x, a_y, b_x, b_y, p_x, p_y].map(|value| value.parse().unwrap())
         })
         .enumerate()
-        .map(|(i, [a_x, a_y, b_x, b_y, p_x, p_y])| {
+        .map(|(_, [a_x, a_y, b_x, b_y, p_x, p_y])| {
             let opt = Optimize::new(&ctx);
             let a = Int::new_const(&ctx, "a");
             let b = Int::new_const(&ctx, "b");
@@ -80,7 +80,7 @@ fn part_2(input: &str) -> u64 {
             [a_x, a_y, b_x, b_y, p_x, p_y].map(|value| value.parse().unwrap())
         })
         .enumerate()
-        .map(|(i, [a_x, a_y, b_x, b_y, p_x, p_y])| {
+        .map(|(_, [a_x, a_y, b_x, b_y, p_x, p_y])| {
             let p_x = p_x + 10000000000000;
             let p_y = p_y + 10000000000000;
             let opt = Optimize::new(&ctx);
