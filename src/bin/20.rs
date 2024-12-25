@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet, VecDeque};
+use std::collections::{HashMap, VecDeque};
 
 const TEST: &'static str = include_str!("../../input/20/test.txt");
 const INPUT: &'static str = include_str!("../../input/20/input.txt");
