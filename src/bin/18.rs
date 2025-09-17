@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::collections::{HashMap, VecDeque};
 
 const TEST: &'static str = include_str!("../../input/18/test.txt");
@@ -70,28 +71,25 @@ fn part_2(input: &str, grid_size: usize) -> (usize, usize) {
         })
         .collect();
 
-    let mut left = 0;
-    let mut right = bytes.len() - 1;
+    let cutoff = (0..bytes.len())
+        .collect::<Vec<usize>>()
+        .binary_search_by(|x| {
+            let mut corrupted: Vec<Vec<bool>> = (0..=grid_size)
+                .map(|_| (0..=grid_size).map(|_| false).collect())
+                .collect();
 
-    loop {
-        let mid = (left + right) / 2;
-        let mut corrupted: Vec<Vec<bool>> = (0..=grid_size)
-            .map(|_| (0..=grid_size).map(|_| false).collect())
-            .collect();
+            bytes.iter().take(*x).for_each(|(x, y)| {
+                corrupted[*y][*x] = true;
+            });
 
-        bytes.iter().take(mid).for_each(|(x, y)| {
-            corrupted[*y][*x] = true;
-        });
+            match solve(&corrupted, grid_size) {
+                Some(_) => Ordering::Less,
+                None => Ordering::Greater,
+            }
+        })
+        .unwrap_err();
 
-        match solve(&corrupted, grid_size) {
-            Some(_) => left = mid + 1,
-            None => right = mid - 1,
-        }
-
-        if left > right {
-            return bytes[mid];
-        }
-    }
+    bytes[cutoff - 1]
 }
 
 fn main() {
